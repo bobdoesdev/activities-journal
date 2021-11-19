@@ -37,3 +37,5 @@ export default function DailyViewPage() {
     </>
   );
 }
+
+// todo find out why 400 error when first redirected here

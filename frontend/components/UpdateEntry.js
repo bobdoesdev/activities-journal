@@ -6,10 +6,10 @@ import * as Yup from 'yup';
 import getIsoDate from '../lib/getIsoDate';
 import FormStyles from './styles/FormStyles';
 import { useUser } from './User';
-import { ALL_TAGS_QUERY } from './CreateEntry';
 import CreateTag from './CreateTag';
 import Select from './Select';
 import TextInput from './TextInput';
+import ALL_TAGS_QUERY from '../queries/ALL_TAGS_QUERY';
 
 const SINGLE_ENTRY_QUERY = gql`
   query SINGLE_ENTRY_QUERY($id: ID!) {
@@ -77,9 +77,7 @@ export default function UpdateEntry({ id }) {
     Formik.initialValues = {
       title: data?.Entry.title,
       notes: data?.Entry.notes,
-      //   tag: children: {
-      //     data?.Entry.tag.name,
-      //   }
+      tag: { value: data?.Entry.tag.id },
     };
   }, [initialValues]);
 
@@ -132,7 +130,12 @@ export default function UpdateEntry({ id }) {
               placeholder="Notes"
             />
 
-            <Select label="Tag" name="tag">
+            <Select
+              label="Tag"
+              name="tag"
+              //   defaultValue={selected}
+              //   value={selected}
+            >
               <option value="">Choose a Tag</option>
               {tagData?.allTags.map((tag) => (
                 <option value={tag.id} key={tag.id}>

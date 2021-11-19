@@ -5,7 +5,7 @@ import FormStyles from './styles/FormStyles';
 import useForm from '../lib/useForm';
 import DisplayError from './ErrorMessage';
 import { useUser } from './User';
-import { ALL_TAGS_QUERY } from './CreateEntry';
+import ALL_TAGS_QUERY from '../queries/ALL_TAGS_QUERY';
 
 const CREATE_TAG_MUTATION = gql`
   mutation CREATE_TAG_MUTATION($name: String!, $user: ID!) {

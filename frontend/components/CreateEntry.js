@@ -3,16 +3,14 @@ import gql from 'graphql-tag';
 
 import { Formik, Form, useField, resetForm } from 'formik';
 import * as Yup from 'yup';
-import ButtonStyles from './styles/ButtonStyles';
 import { useUser } from './User';
-import DisplayError from './ErrorMessage';
 import getIsoDate from '../lib/getIsoDate';
 import { ALL_ENTRIES_QUERY } from '../queries/ALL_ENTRIES_QUERY';
-import CreateTag from './CreateTag';
-import ButtonList from './styles/ButtonList';
 import Select from './Select';
 import TextInput from './TextInput';
 import FormStyles from './styles/FormStyles';
+import ALL_TAGS_QUERY from '../queries/ALL_TAGS_QUERY';
+import CreateTag from './CreateTag';
 
 export const CREATE_ENTRY_MUTATION = gql`
   mutation CREATE_ENTRY_MUTATION(
@@ -34,15 +32,6 @@ export const CREATE_ENTRY_MUTATION = gql`
       id
       title
       notes
-    }
-  }
-`;
-
-export const ALL_TAGS_QUERY = gql`
-  query ALL_TAGS_QUERY($user: ID!) {
-    allTags(where: { user: { id: $user } }) {
-      id
-      name
     }
   }
 `;
