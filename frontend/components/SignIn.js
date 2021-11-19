@@ -40,8 +40,6 @@ export default function SignIn(props) {
   // console.log(error);
   return (
     <>
-      <h2>Sign into your account</h2>
-      <DisplayError error={error} />
       <Formik
         initialValues={{
           email: '',
@@ -75,6 +73,8 @@ export default function SignIn(props) {
         }}
       >
         <FormStyles>
+          <h2>Sign into your account</h2>
+          <DisplayError error={error} />
           <Form method="POST">
             <TextInput
               label="Email"
