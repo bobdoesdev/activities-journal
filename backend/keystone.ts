@@ -9,6 +9,7 @@ import { extendGraphqlSchema } from './mutations/index';
 import { User } from './schemas/User';
 import { Entry } from './schemas/Entry';
 import { Tag } from './schemas/Tag';
+import { sendPasswordResetEmail } from './lib/mail';
 
 const databaseUrl =
   process.env.DATABASE_URL || 'mongodb://localhost/activities-journals';
@@ -25,6 +26,12 @@ const { withAuth } = createAuth({
   initFirstItem: {
     fields: ['name', 'email', 'password'],
     // todo add in initial roles here
+  },
+  passwordResetLink: {
+    async sendToken(args) {
+      // send the email
+      await sendPasswordResetEmail(args.token, args.identity);
+    },
   },
 });
 

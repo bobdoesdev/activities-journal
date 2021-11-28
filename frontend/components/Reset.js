@@ -6,27 +6,35 @@ import DisplayError from './ErrorMessage';
 import FormStyles from './styles/FormStyles';
 import TextInput from './TextInput';
 
-const SIGNUP_MUTATION = gql`
-  mutation SIGNUP_MUTATION(
+const RESET_MUTATION = gql`
+  mutation RESET_MUTATION(
     $email: String!
-    $name: String!
+    $token: String!
     $password: String!
   ) {
-    createUser(data: { email: $email, name: $name, password: $password }) {
-      id
+    redeemUserPasswordResetToken(
+      email: $email
+      token: $token
+      password: $password
+    ) {
+      code
+      message
     }
   }
 `;
 
-export default function SignUp(props) {
-  const [signup, { data, loading, error }] = useMutation(SIGNUP_MUTATION);
+export default function Reset({ token }) {
+  const [reset, { data, loading, error }] = useMutation(RESET_MUTATION);
+
+  const successfulError = data?.redeemUserPasswordResetToken?.code
+    ? data?.redeemUserPasswordResetToken
+    : undefined;
 
   return (
     <>
       <Formik
         initialValues={{
           email: '',
-          name: '',
           password: '',
         }}
         validationSchema={Yup.object({
@@ -34,33 +42,23 @@ export default function SignUp(props) {
           password: Yup.string().required('No password provided.'),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          const res = await signup({
+          const res = await reset({
             variables: {
               email: values.email,
-              name: values.name,
               password: values.password,
+              token,
             },
-          });
+          }).catch(console.error);
+          console.log(res);
         }}
       >
         <FormStyles>
-          <h2>Sign up for an account</h2>
-          <DisplayError error={error} />
+          <h2>Reset your password</h2>
+          <DisplayError error={error || successfulError} />
           <Form method="POST">
-            {data?.createUser && (
-              <p>
-                Signed up with {data.createUser.email} - Please go ahead and
-                signin!
-              </p>
+            {data?.redeemUserPasswordResetToken === null && (
+              <p>Success! You can now sign in!</p>
             )}
-            <TextInput
-              label="Name"
-              name="name"
-              type="name"
-              placeholder="Name"
-              autoComplete="name"
-            />
-
             <TextInput
               label="Email"
               name="email"
@@ -76,12 +74,10 @@ export default function SignUp(props) {
               placeholder="Password"
             />
 
-            <button type="submit">Sign Up</button>
+            <button type="submit">Reset password</button>
           </Form>
         </FormStyles>
       </Formik>
     </>
   );
 }
-
-// todo redirect on signin
